@@ -5,18 +5,20 @@ import 'package:bukidlink/Utils/constants/AppTextStyles.dart';
 import 'package:bukidlink/models/Post.dart';
 import 'package:bukidlink/services/PostService.dart';
 import 'package:bukidlink/services/UserService.dart';
+import 'package:bukidlink/Utils/constants/AppColors.dart';
 
-class MakePost extends StatefulWidget {
+class AddPost extends StatefulWidget {
   final String text; // Text shown in the tappable container
   final VoidCallback? onPostCreated;
 
-  const MakePost({Key? key, this.text = "This is the single scrollable container", this.onPostCreated}) : super(key: key);
+  const AddPost({Key? key, this.text = "Make a post", this.onPostCreated}) : super(key: key);
+
 
   @override
-  _MakePostState createState() => _MakePostState();
+  _AddPostState createState() => _AddPostState();
 }
 
-class _MakePostState extends State<MakePost> {
+class _AddPostState extends State<AddPost> {
   final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
   final _imageUrlController = TextEditingController();
@@ -98,32 +100,31 @@ class _MakePostState extends State<MakePost> {
                         ),
 
                         // Header
-                        // resolve profile image for modal
                         Builder(
                           builder: (context) {
                             final modalProfile = user?.profilePic;
                             return Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage: (modalProfile != null && modalProfile.isNotEmpty)
-                                  ? (modalProfile.toLowerCase().startsWith('http')
-                                      ? NetworkImage(modalProfile)
-                                      : AssetImage('assets' + modalProfile) as ImageProvider)
-                                  : const AssetImage('assets/images/default_profile.png'),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                "Create Post",
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey[900]),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('Close'),
-                            ),
-                          ],
+                              children: [
+                                CircleAvatar(
+                                  radius: 20,
+                                  backgroundImage: (modalProfile != null && modalProfile.isNotEmpty)
+                                      ? (modalProfile.toLowerCase().startsWith('http')
+                                          ? NetworkImage(modalProfile)
+                                          : AssetImage('assets' + modalProfile) as ImageProvider)
+                                      : const AssetImage('assets/images/default_profile.png'),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    "Create Post",
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey[900]),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Close'),
+                                ),
+                              ],
                             );
                           },
                         ),
@@ -169,7 +170,6 @@ class _MakePostState extends State<MakePost> {
                                 modalSetState(() {
                                   _imageFile = null;
                                 });
-                                // Focus the URL field for quick paste
                                 FocusScope.of(context).requestFocus(FocusNode());
                               },
                               icon: const Icon(Icons.link, color: Colors.blue),
@@ -186,7 +186,6 @@ class _MakePostState extends State<MakePost> {
                                 icon: const Icon(Icons.delete_forever, color: Colors.red),
                               ),
                             const Spacer(),
-                            // character count
                             Text(
                               '${_textController.text.trim().length}/1000',
                               style: TextStyle(color: Colors.grey[600], fontSize: 12),
@@ -214,7 +213,7 @@ class _MakePostState extends State<MakePost> {
                           ),
                           onChanged: (value) {
                             modalSetState(() {
-                              if (value.isNotEmpty) _imageFile = null; // Clear picked file
+                              if (value.isNotEmpty) _imageFile = null;
                             });
                           },
                         ),
@@ -277,7 +276,7 @@ class _MakePostState extends State<MakePost> {
                                       }
                                     }
                                   : null,
-                              style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12)),
+                              style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12), backgroundColor: AppColors.primaryGreen),
                               child: const Text("Post"),
                             ),
                           ],
@@ -301,57 +300,53 @@ class _MakePostState extends State<MakePost> {
     super.dispose();
   }
 
- @override
-Widget build(BuildContext context) {
-  final profileImage = user?.profilePic;
-
-  return GestureDetector(
-    onTap: _showModal,
-    child: Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 240, 244, 230),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.15), // more visible shadow
-            blurRadius: 12,
-            spreadRadius: 1,
-            offset: const Offset(0, 6),
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _showModal,
+        child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [AppColors.HEADER_GRADIENT_START, AppColors.HEADER_GRADIENT_END],
           ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // --- Profile Image ---
-          CircleAvatar(
-            radius: 22,
-            backgroundImage: (profileImage != null && profileImage.isNotEmpty)
-            ? (profileImage.toLowerCase().startsWith('http')
-            ? NetworkImage(profileImage)
-            : AssetImage('assets' + profileImage) as ImageProvider)
-            : const AssetImage('assets/images/default_profile.png'),
-          ),
-
-          const SizedBox(width: 16),
-
-          // --- Text ---
-          Expanded(
-            child: Text(
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 12,
+              spreadRadius: 1,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.create,
+              color: Colors.white70,
+              size: 20,
+            ),
+            const SizedBox(width: 10),
+            Text(
               widget.text,
+              textAlign: TextAlign.center,
               style: AppTextStyles.FORM_LABEL.copyWith(
-                fontSize: 14,       // slightly smaller than username
-                color: Colors.black87,
-                height: 1.4,
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                height: 1.2,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
 }

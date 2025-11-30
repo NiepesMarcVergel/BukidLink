@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:bukidlink/Pages/LoginPage.dart';
 import 'package:bukidlink/Pages/HomePage.dart';
 import 'package:bukidlink/Pages/ProfilePage.dart';
-import 'package:bukidlink/Pages/farmer/FarmerProfilePage.dart';
-import 'package:bukidlink/Pages/MessagePage.dart';
-import 'package:bukidlink/pages/farmer/FarmerStorePage.dart';
-import 'package:bukidlink/Pages/farmer/FarmerProfilePage.dart';
+// Note: Other pages can be imported here when needed.
+// FarmerProfilePage routes now use the unified `ProfilePage`.
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -17,9 +15,9 @@ class App extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
       ),
-      // home: const LoginPage(),
-      home:
-          const FarmerStorePage(), // remove this line after testing or to access the farm store page directly
+      home: const LoginPage(),
+      // home:
+      //     const FarmerStorePage(), // remove this line after testing or to access the farm store page directly
       routes: {
         // Add any simple, argument-free routes here
         // '/message': (context) => const MessagePage(),
@@ -46,8 +44,10 @@ class App extends StatelessWidget {
         if (settings.name == '/farmerProfile') {
           final args = settings.arguments;
           if (args is String) {
+            // Route farmer profile to the unified ProfilePage so it shows
+            // the StorePreview and post history consistently.
             return MaterialPageRoute(
-              builder: (context) => FarmerProfilePage(profileID: args),
+              builder: (context) => ProfilePage(profileID: args),
             );
           } else {
             // Fallback for missing or invalid arguments
